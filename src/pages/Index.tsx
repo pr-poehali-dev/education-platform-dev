@@ -13,6 +13,7 @@ const Index = () => {
   const [language, setLanguage] = useState('ru');
   const [startTime, setStartTime] = useState('09:00');
   const [showTimeSettings, setShowTimeSettings] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('Все');
 
   const translations: any = {
     ru: {
@@ -756,18 +757,50 @@ const Index = () => {
         </section>
 
         <section className="mb-16">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center justify-between mb-6">
             <div>
               <h3 className="text-3xl font-bold mb-2">Мои курсы</h3>
               <p className="text-gray-600">Продолжай обучение прямо сейчас</p>
             </div>
-            <Button variant="outline">
-              <Icon name="Filter" size={20} className="mr-2" />
-              Фильтр
-            </Button>
           </div>
+          
+          <div className="flex flex-wrap gap-2 mb-8">
+            {['Все', 'Языки', 'Точные науки', 'Естественные науки', 'Гуманитарные науки', 'Творчество', 'Развитие мышления', 'Навыки', 'Социальные навыки', 'Соревнования', 'Здоровье', 'Экономика', 'IT'].map((category) => (
+              <Button
+                key={category}
+                variant={selectedCategory === category ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setSelectedCategory(category)}
+                className={selectedCategory === category ? 'bg-gradient-to-r from-purple-500 to-pink-500' : ''}
+              >
+                <Icon 
+                  name={
+                    category === 'Все' ? 'Grid3x3' :
+                    category === 'Языки' ? 'Languages' :
+                    category === 'Точные науки' ? 'Calculator' :
+                    category === 'Естественные науки' ? 'Atom' :
+                    category === 'Гуманитарные науки' ? 'BookOpen' :
+                    category === 'Творчество' ? 'Palette' :
+                    category === 'Развитие мышления' ? 'Brain' :
+                    category === 'Навыки' ? 'Clock' :
+                    category === 'Социальные навыки' ? 'Users' :
+                    category === 'Соревнования' ? 'Trophy' :
+                    category === 'Здоровье' ? 'Heart' :
+                    category === 'Экономика' ? 'TrendingUp' :
+                    'Cpu'
+                  } 
+                  size={16} 
+                  className="mr-2" 
+                />
+                {category}
+              </Button>
+            ))}
+          </div>
+
           <div className="grid md:grid-cols-2 gap-6">
-            {courses.map((course, index) => (
+            {courses
+              .filter(course => selectedCategory === 'Все' || course.category === selectedCategory)
+              .map((course, index) => (
               <Card
                 key={course.id}
                 className="hover:shadow-xl transition-all cursor-pointer group overflow-hidden"
