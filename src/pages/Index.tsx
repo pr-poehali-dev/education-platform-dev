@@ -14,6 +14,7 @@ const Index = () => {
   const [startTime, setStartTime] = useState('09:00');
   const [showTimeSettings, setShowTimeSettings] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('Все');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const translations: any = {
     ru: {
@@ -763,6 +764,27 @@ const Index = () => {
               <p className="text-gray-600">Продолжай обучение прямо сейчас</p>
             </div>
           </div>
+
+          <div className="mb-6">
+            <div className="relative max-w-md">
+              <Icon name="Search" size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Поиск курса по названию..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  <Icon name="X" size={20} />
+                </button>
+              )}
+            </div>
+          </div>
           
           <div className="flex flex-wrap gap-2 mb-8">
             {['Все', 'Языки', 'Точные науки', 'Естественные науки', 'Гуманитарные науки', 'Творчество', 'Развитие мышления', 'Навыки', 'Социальные навыки', 'Соревнования', 'Здоровье', 'Экономика', 'IT'].map((category) => (
@@ -799,7 +821,25 @@ const Index = () => {
 
           <div className="grid md:grid-cols-2 gap-6">
             {courses
-              .filter(course => selectedCategory === 'Все' || course.category === selectedCategory)
+              .filter(course => {
+                const matchesCategory = selectedCategory === 'Все' || course.category === selectedCategory;
+                const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                     course.description.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesCategory && matchesSearch;
+              })
+              .length === 0 ? (
+                <div className="col-span-2 text-center py-12">
+                  <Icon name="Search" size={64} className="mx-auto text-gray-300 mb-4" />
+                  <h4 className="text-xl font-semibold text-gray-600 mb-2">Курсы не найдены</h4>
+                  <p className="text-gray-500">Попробуйте изменить параметры поиска или выбрать другую категорию</p>
+                </div>
+              ) : courses
+              .filter(course => {
+                const matchesCategory = selectedCategory === 'Все' || course.category === selectedCategory;
+                const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                     course.description.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesCategory && matchesSearch;
+              })
               .map((course, index) => (
               <Card
                 key={course.id}
