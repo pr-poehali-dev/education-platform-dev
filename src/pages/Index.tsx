@@ -78,7 +78,7 @@ const Index = () => {
                 <Icon name="GraduationCap" className="text-white" size={24} />
               </div>
               <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                EduSpace
+                Learn & Grow Soro
               </h1>
             </div>
             <nav className="hidden md:flex gap-6">
@@ -275,7 +275,7 @@ const Index = () => {
 
       <footer className="border-t mt-20 py-8 bg-white">
         <div className="container mx-auto px-4 text-center text-gray-600">
-          <p>&copy; 2024 EduSpace. Платформа для современного обучения</p>
+          <p>&copy; 2024 Learn & Grow Soro. Платформа для современного обучения</p>
         </div>
       </footer>
     </div>
