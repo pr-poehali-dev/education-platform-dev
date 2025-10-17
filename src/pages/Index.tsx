@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
@@ -7,6 +7,61 @@ import Icon from '@/components/ui/icon';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('overview');
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [focusMode, setFocusMode] = useState(false);
+  const [currentLesson, setCurrentLesson] = useState<any>(null);
+
+  const schedule = [
+    { id: 1, subject: 'Математика', start: '09:00', end: '10:30', duration: 90, icon: 'Calculator', gradient: 'from-purple-500 to-pink-500' },
+    { id: 2, subject: 'Перерыв', start: '10:30', end: '10:45', duration: 15, icon: 'Coffee', gradient: 'from-green-400 to-emerald-400', isBreak: true },
+    { id: 3, subject: 'Физика', start: '10:45', end: '12:15', duration: 90, icon: 'Atom', gradient: 'from-blue-500 to-cyan-500' },
+    { id: 4, subject: 'Обед', start: '12:15', end: '13:00', duration: 45, icon: 'UtensilsCrossed', gradient: 'from-orange-400 to-amber-400', isBreak: true },
+    { id: 5, subject: 'Программирование', start: '13:00', end: '14:30', duration: 90, icon: 'Code', gradient: 'from-orange-500 to-red-500' },
+    { id: 6, subject: 'Перерыв', start: '14:30', end: '14:45', duration: 15, icon: 'Coffee', gradient: 'from-green-400 to-emerald-400', isBreak: true },
+    { id: 7, subject: 'Английский', start: '14:45', end: '16:15', duration: 90, icon: 'Globe', gradient: 'from-green-500 to-emerald-500' },
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    const now = currentTime.getHours() * 60 + currentTime.getMinutes();
+    const current = schedule.find(lesson => {
+      const [startH, startM] = lesson.start.split(':').map(Number);
+      const [endH, endM] = lesson.end.split(':').map(Number);
+      const startMin = startH * 60 + startM;
+      const endMin = endH * 60 + endM;
+      return now >= startMin && now < endMin;
+    });
+    setCurrentLesson(current || null);
+    if (current && !current.isBreak) {
+      setFocusMode(true);
+    } else {
+      setFocusMode(false);
+    }
+  }, [currentTime]);
+
+  const getTimeRemaining = () => {
+    if (!currentLesson) return null;
+    const [endH, endM] = currentLesson.end.split(':').map(Number);
+    const endTime = endH * 60 + endM;
+    const now = currentTime.getHours() * 60 + currentTime.getMinutes();
+    const remaining = endTime - now;
+    const hours = Math.floor(remaining / 60);
+    const minutes = remaining % 60;
+    return { hours, minutes, total: remaining };
+  };
+
+  const blockedSites = [
+    'youtube.com', 'instagram.com', 'tiktok.com', 'vk.com', 'telegram.org',
+    'netflix.com', 'twitch.tv', 'reddit.com', 'twitter.com'
+  ];
+
+  const totalStudyTime = schedule.filter(s => !s.isBreak).reduce((acc, s) => acc + s.duration, 0);
 
   const courses = [
     {
@@ -99,6 +154,131 @@ const Index = () => {
       </header>
 
       <main className="container mx-auto px-4 py-12">
+        {focusMode && currentLesson && (
+          <div className="mb-8 animate-fade-in">
+            <Card className="border-2 border-orange-500 bg-gradient-to-r from-orange-50 to-red-50">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between flex-wrap gap-4">
+                  <div className="flex items-center gap-4">
+                    <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${currentLesson.gradient} flex items-center justify-center animate-float`}>
+                      <Icon name={currentLesson.icon} className="text-white" size={32} />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <Badge className="bg-orange-500 text-white">Режим фокусировки</Badge>
+                        <Icon name="Lock" size={16} className="text-orange-600" />
+                      </div>
+                      <h3 className="text-2xl font-bold">{currentLesson.subject}</h3>
+                      <p className="text-gray-600">{currentLesson.start} - {currentLesson.end}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm text-gray-600 mb-1">Осталось времени</p>
+                    <p className="text-4xl font-bold text-orange-600">
+                      {getTimeRemaining()?.hours}ч {getTimeRemaining()?.minutes}м
+                    </p>
+                    <Progress 
+                      value={((currentLesson.duration - (getTimeRemaining()?.total || 0)) / currentLesson.duration) * 100} 
+                      className="h-2 mt-2 w-32"
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        <section className="mb-16">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h3 className="text-3xl font-bold mb-2">Расписание на сегодня</h3>
+              <p className="text-gray-600">Общее время занятий: {Math.floor(totalStudyTime / 60)}ч {totalStudyTime % 60}м</p>
+            </div>
+            <Button 
+              variant={focusMode ? "destructive" : "default"}
+              className={focusMode ? "" : "bg-gradient-to-r from-purple-500 to-pink-500"}
+            >
+              <Icon name={focusMode ? "Lock" : "Unlock"} size={20} className="mr-2" />
+              {focusMode ? 'Фокус активен' : 'Начать занятия'}
+            </Button>
+          </div>
+          <div className="grid gap-4">
+            {schedule.map((lesson, index) => {
+              const isCurrent = currentLesson?.id === lesson.id;
+              const [startH, startM] = lesson.start.split(':').map(Number);
+              const startMin = startH * 60 + startM;
+              const now = currentTime.getHours() * 60 + currentTime.getMinutes();
+              const isPast = now > startMin + lesson.duration;
+              
+              return (
+                <Card 
+                  key={lesson.id} 
+                  className={`transition-all ${
+                    isCurrent ? 'border-2 border-orange-500 shadow-lg scale-105' : 
+                    isPast ? 'opacity-50' : ''
+                  } ${lesson.isBreak ? 'bg-gradient-to-r from-green-50 to-emerald-50' : ''}`}
+                >
+                  <CardContent className="py-4">
+                    <div className="flex items-center justify-between flex-wrap gap-4">
+                      <div className="flex items-center gap-4">
+                        <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${lesson.gradient} flex items-center justify-center`}>
+                          <Icon name={lesson.icon} className="text-white" size={24} />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h4 className="text-xl font-bold">{lesson.subject}</h4>
+                            {isCurrent && <Badge className="bg-orange-500">Сейчас</Badge>}
+                            {isPast && <Badge variant="secondary">Завершено</Badge>}
+                            {lesson.isBreak && <Badge className="bg-green-500">Перерыв</Badge>}
+                          </div>
+                          <p className="text-gray-600">{lesson.start} - {lesson.end} ({lesson.duration} мин)</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        {!lesson.isBreak && (
+                          <div className="text-right">
+                            <Icon name="BookOpen" className="inline text-purple-500" size={20} />
+                            <span className="ml-2 text-sm text-gray-600">Учебное время</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </section>
+
+        {focusMode && (
+          <section className="mb-16">
+            <Card className="border-red-200 bg-red-50">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-red-700">
+                  <Icon name="ShieldAlert" size={24} />
+                  Заблокированные сайты во время занятий
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-700 mb-4">
+                  Для максимальной концентрации доступ к следующим сайтам временно ограничен:
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {blockedSites.map((site, index) => (
+                    <Badge key={index} variant="destructive" className="flex items-center gap-1">
+                      <Icon name="Ban" size={14} />
+                      {site}
+                    </Badge>
+                  ))}
+                </div>
+                <p className="text-sm text-gray-600 mt-4">
+                  ⏰ Доступ восстановится после окончания текущего занятия
+                </p>
+              </CardContent>
+            </Card>
+          </section>
+        )}
+
         <section className="mb-16 animate-fade-in">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
