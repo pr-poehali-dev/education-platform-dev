@@ -15,6 +15,10 @@ const Index = () => {
   const [showTimeSettings, setShowTimeSettings] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('Все');
   const [searchQuery, setSearchQuery] = useState('');
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
+  const [user, setUser] = useState<any>(null);
+  const [authForm, setAuthForm] = useState({ name: '', email: '', password: '' });
 
   const translations: any = {
     ru: {
@@ -37,6 +41,18 @@ const Index = () => {
       free: 'Бесплатно',
       setTime: 'Установить время',
       chooseStartTime: 'Выберите время начала занятий',
+      login: 'Войти',
+      register: 'Регистрация',
+      loginTitle: 'Вход в аккаунт',
+      registerTitle: 'Создать аккаунт',
+      name: 'Имя',
+      email: 'Email',
+      password: 'Пароль',
+      loginButton: 'Войти',
+      registerButton: 'Зарегистрироваться',
+      noAccount: 'Нет аккаунта?',
+      haveAccount: 'Уже есть аккаунт?',
+      logout: 'Выйти',
     },
     tj: {
       appName: 'Learn & Grow Soro',
@@ -187,6 +203,23 @@ const Index = () => {
   const schedule = generateSchedule(startTime);
 
   useEffect(() => {
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+    
+    const savedStartTime = localStorage.getItem('startTime');
+    if (savedStartTime) {
+      setStartTime(savedStartTime);
+    }
+    
+    const savedLanguage = localStorage.getItem('language');
+    if (savedLanguage) {
+      setLanguage(savedLanguage);
+    }
+  }, []);
+
+  useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
@@ -219,6 +252,54 @@ const Index = () => {
     const hours = Math.floor(remaining / 60);
     const minutes = remaining % 60;
     return { hours, minutes, total: remaining };
+  };
+
+  const handleAuth = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (isLogin) {
+      const savedUsers = JSON.parse(localStorage.getItem('users') || '[]');
+      const foundUser = savedUsers.find((u: any) => u.email === authForm.email && u.password === authForm.password);
+      
+      if (foundUser) {
+        setUser(foundUser);
+        localStorage.setItem('user', JSON.stringify(foundUser));
+        setShowAuthModal(false);
+        setAuthForm({ name: '', email: '', password: '' });
+      } else {
+        alert('Неверный email или пароль');
+      }
+    } else {
+      const savedUsers = JSON.parse(localStorage.getItem('users') || '[]');
+      const userExists = savedUsers.find((u: any) => u.email === authForm.email);
+      
+      if (userExists) {
+        alert('Пользователь с таким email уже существует');
+      } else {
+        const newUser = { ...authForm, id: Date.now() };
+        savedUsers.push(newUser);
+        localStorage.setItem('users', JSON.stringify(savedUsers));
+        localStorage.setItem('user', JSON.stringify(newUser));
+        setUser(newUser);
+        setShowAuthModal(false);
+        setAuthForm({ name: '', email: '', password: '' });
+      }
+    }
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem('user');
+  };
+
+  const handleLanguageChange = (lang: string) => {
+    setLanguage(lang);
+    localStorage.setItem('language', lang);
+  };
+
+  const handleStartTimeChange = (time: string) => {
+    setStartTime(time);
+    localStorage.setItem('startTime', time);
   };
 
   const blockedSites = [
@@ -502,7 +583,7 @@ const Index = () => {
             <div className="flex items-center gap-2">
               <select
                 value={language}
-                onChange={(e) => setLanguage(e.target.value)}
+                onChange={(e) => handleLanguageChange(e.target.value)}
                 className="px-3 py-2 border rounded-lg text-sm bg-white"
               >
                 <option value="ru">🇷🇺 Русский</option>
@@ -512,9 +593,30 @@ const Index = () => {
                 <option value="ko">🇰🇷 한국어</option>
                 <option value="zh">🇨🇳 中文</option>
               </select>
-              <Button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
-                {t.profile}
-              </Button>
+              {user ? (
+                <div className="flex items-center gap-2">
+                  <div className="px-3 py-2 bg-white border rounded-lg flex items-center gap-2">
+                    <Icon name="User" size={16} />
+                    <span className="text-sm font-medium">{user.name}</span>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={handleLogout}
+                  >
+                    <Icon name="LogOut" size={16} className="mr-1" />
+                    {t.logout}
+                  </Button>
+                </div>
+              ) : (
+                <Button 
+                  className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+                  onClick={() => setShowAuthModal(true)}
+                >
+                  <Icon name="User" size={16} className="mr-2" />
+                  {t.login}
+                </Button>
+              )}
             </div>
           </div>
         </div>
@@ -713,7 +815,7 @@ const Index = () => {
                     <input
                       type="time"
                       value={startTime}
-                      onChange={(e) => setStartTime(e.target.value)}
+                      onChange={(e) => handleStartTimeChange(e.target.value)}
                       className="w-full px-4 py-3 border rounded-lg text-lg"
                     />
                   </div>
@@ -941,6 +1043,77 @@ const Index = () => {
           <p>&copy; 2024 Learn & Grow Soro. Платформа для современного обучения</p>
         </div>
       </footer>
+
+      {showAuthModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 animate-fade-in p-4">
+          <Card className="max-w-md w-full">
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <span>{isLogin ? t.loginTitle : t.registerTitle}</span>
+                <Button variant="ghost" size="sm" onClick={() => setShowAuthModal(false)}>
+                  <Icon name="X" size={20} />
+                </Button>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleAuth} className="space-y-4">
+                {!isLogin && (
+                  <div>
+                    <label className="block text-sm font-medium mb-2">{t.name}</label>
+                    <input
+                      type="text"
+                      value={authForm.name}
+                      onChange={(e) => setAuthForm({ ...authForm, name: e.target.value })}
+                      className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      required
+                      placeholder="Ваше имя"
+                    />
+                  </div>
+                )}
+                <div>
+                  <label className="block text-sm font-medium mb-2">{t.email}</label>
+                  <input
+                    type="email"
+                    value={authForm.email}
+                    onChange={(e) => setAuthForm({ ...authForm, email: e.target.value })}
+                    className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    required
+                    placeholder="your@email.com"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">{t.password}</label>
+                  <input
+                    type="password"
+                    value={authForm.password}
+                    onChange={(e) => setAuthForm({ ...authForm, password: e.target.value })}
+                    className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    required
+                    placeholder="••••••••"
+                    minLength={6}
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+                >
+                  <Icon name={isLogin ? 'LogIn' : 'UserPlus'} size={20} className="mr-2" />
+                  {isLogin ? t.loginButton : t.registerButton}
+                </Button>
+                <div className="text-center">
+                  <button
+                    type="button"
+                    onClick={() => setIsLogin(!isLogin)}
+                    className="text-sm text-purple-600 hover:text-purple-700 underline"
+                  >
+                    {isLogin ? t.noAccount : t.haveAccount} {isLogin ? t.register : t.login}
+                  </button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 };
