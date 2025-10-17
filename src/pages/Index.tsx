@@ -157,13 +157,17 @@ const Index = () => {
     };
     
     const lessons = [
-      { subject: 'Математика', duration: 90, icon: 'Calculator', gradient: 'from-purple-500 to-pink-500' },
-      { subject: 'Перерыв', duration: 15, icon: 'Coffee', gradient: 'from-green-400 to-emerald-400', isBreak: true },
-      { subject: 'Физика', duration: 90, icon: 'Atom', gradient: 'from-blue-500 to-cyan-500' },
+      { subject: 'Математика', duration: 60, icon: 'Calculator', gradient: 'from-purple-500 to-pink-500' },
+      { subject: 'Перерыв', duration: 10, icon: 'Coffee', gradient: 'from-green-400 to-emerald-400', isBreak: true },
+      { subject: 'Биология', duration: 60, icon: 'Dna', gradient: 'from-emerald-500 to-teal-500' },
+      { subject: 'Перерыв', duration: 10, icon: 'Coffee', gradient: 'from-green-400 to-emerald-400', isBreak: true },
+      { subject: 'Химия', duration: 60, icon: 'FlaskConical', gradient: 'from-cyan-500 to-blue-500' },
       { subject: 'Обед', duration: 45, icon: 'UtensilsCrossed', gradient: 'from-orange-400 to-amber-400', isBreak: true },
-      { subject: 'Программирование', duration: 90, icon: 'Code', gradient: 'from-orange-500 to-red-500' },
-      { subject: 'Перерыв', duration: 15, icon: 'Coffee', gradient: 'from-green-400 to-emerald-400', isBreak: true },
-      { subject: 'Английский', duration: 90, icon: 'Globe', gradient: 'from-green-500 to-emerald-500' },
+      { subject: 'Английский', duration: 60, icon: 'Globe', gradient: 'from-blue-600 to-indigo-600' },
+      { subject: 'Перерыв', duration: 10, icon: 'Coffee', gradient: 'from-green-400 to-emerald-400', isBreak: true },
+      { subject: 'История', duration: 60, icon: 'BookOpen', gradient: 'from-amber-500 to-orange-500' },
+      { subject: 'Перерыв', duration: 10, icon: 'Coffee', gradient: 'from-green-400 to-emerald-400', isBreak: true },
+      { subject: 'Искусство Азии', duration: 60, icon: 'Palette', gradient: 'from-pink-500 to-rose-500' },
     ];
     
     return lessons.map((lesson, index) => {
@@ -226,42 +230,182 @@ const Index = () => {
     {
       id: 1,
       title: 'Математика',
+      category: 'Точные науки',
       progress: 75,
       level: 'Продвинутый',
       icon: 'Calculator',
       gradient: 'from-purple-500 to-pink-500',
-      lessons: 24,
-      completed: 18,
+      lessons: 32,
+      completed: 24,
+      description: 'Базовая и прикладная математика с примерами из региональной экономики'
     },
     {
       id: 2,
-      title: 'Физика',
-      progress: 45,
+      title: 'Биология',
+      category: 'Естественные науки',
+      progress: 60,
       level: 'Средний',
-      icon: 'Atom',
-      gradient: 'from-blue-500 to-cyan-500',
-      lessons: 20,
-      completed: 9,
+      icon: 'Dna',
+      gradient: 'from-emerald-500 to-teal-500',
+      lessons: 28,
+      completed: 17,
+      description: 'Изучение живых организмов с примерами из азиатского региона'
     },
     {
       id: 3,
-      title: 'Программирование',
-      progress: 90,
-      level: 'Эксперт',
-      icon: 'Code',
-      gradient: 'from-orange-500 to-red-500',
-      lessons: 30,
-      completed: 27,
+      title: 'Химия',
+      category: 'Естественные науки',
+      progress: 55,
+      level: 'Средний',
+      icon: 'FlaskConical',
+      gradient: 'from-cyan-500 to-blue-500',
+      lessons: 26,
+      completed: 14,
+      description: 'Фундаментальная химия и её применение в технологиях'
     },
     {
       id: 4,
-      title: 'Английский',
-      progress: 60,
-      level: 'Средний',
+      title: 'История',
+      category: 'Гуманитарные науки',
+      progress: 70,
+      level: 'Продвинутый',
+      icon: 'BookOpen',
+      gradient: 'from-amber-500 to-orange-500',
+      lessons: 35,
+      completed: 25,
+      description: 'История Азии, межкультурные связи и региональные особенности'
+    },
+    {
+      id: 5,
+      title: 'Английский язык',
+      category: 'Языки',
+      progress: 80,
+      level: 'Продвинутый',
       icon: 'Globe',
-      gradient: 'from-green-500 to-emerald-500',
+      gradient: 'from-blue-600 to-indigo-600',
       lessons: 40,
-      completed: 24,
+      completed: 32,
+      description: 'Международный язык для межкультурного взаимодействия'
+    },
+    {
+      id: 6,
+      title: 'Казахский язык',
+      category: 'Языки',
+      progress: 45,
+      level: 'Начальный',
+      icon: 'Languages',
+      gradient: 'from-sky-500 to-blue-500',
+      lessons: 30,
+      completed: 14,
+      description: 'Государственный язык Казахстана'
+    },
+    {
+      id: 7,
+      title: 'Китайский язык',
+      category: 'Языки',
+      progress: 35,
+      level: 'Начальный',
+      icon: 'Languages',
+      gradient: 'from-red-500 to-rose-500',
+      lessons: 42,
+      completed: 15,
+      description: 'Один из ключевых языков региона'
+    },
+    {
+      id: 8,
+      title: 'Искусство Азии',
+      category: 'Творчество',
+      progress: 65,
+      level: 'Средний',
+      icon: 'Palette',
+      gradient: 'from-pink-500 to-rose-500',
+      lessons: 24,
+      completed: 16,
+      description: 'Живопись, шахматы, рисование и традиционное искусство'
+    },
+    {
+      id: 9,
+      title: 'Логические задачи',
+      category: 'Развитие мышления',
+      progress: 50,
+      level: 'Средний',
+      icon: 'Brain',
+      gradient: 'from-violet-500 to-purple-500',
+      lessons: 20,
+      completed: 10,
+      description: 'Головоломки для развития критического мышления'
+    },
+    {
+      id: 10,
+      title: 'Тайм-менеджмент',
+      category: 'Навыки',
+      progress: 85,
+      level: 'Продвинутый',
+      icon: 'Clock',
+      gradient: 'from-orange-500 to-red-500',
+      lessons: 15,
+      completed: 13,
+      description: 'Организация учебного процесса и управление временем'
+    },
+    {
+      id: 11,
+      title: 'Межкультурная коммуникация',
+      category: 'Социальные навыки',
+      progress: 40,
+      level: 'Начальный',
+      icon: 'Users',
+      gradient: 'from-indigo-500 to-purple-500',
+      lessons: 18,
+      completed: 7,
+      description: 'Навыки взаимодействия между разными национальностями'
+    },
+    {
+      id: 12,
+      title: 'Олимпиады и конкурсы',
+      category: 'Соревнования',
+      progress: 30,
+      level: 'Все уровни',
+      icon: 'Trophy',
+      gradient: 'from-yellow-500 to-amber-500',
+      lessons: 12,
+      completed: 4,
+      description: 'Подготовка к образовательным мероприятиям'
+    },
+    {
+      id: 13,
+      title: 'Традиционная медицина',
+      category: 'Здоровье',
+      progress: 25,
+      level: 'Начальный',
+      icon: 'Heart',
+      gradient: 'from-rose-500 to-pink-500',
+      lessons: 16,
+      completed: 4,
+      description: 'Акупунктура, аюрведа и восточные практики'
+    },
+    {
+      id: 14,
+      title: 'Региональная экономика',
+      category: 'Экономика',
+      progress: 20,
+      level: 'Начальный',
+      icon: 'TrendingUp',
+      gradient: 'from-green-500 to-emerald-500',
+      lessons: 22,
+      completed: 4,
+      description: 'Особенности рынков и экономики азиатских стран'
+    },
+    {
+      id: 15,
+      title: 'Технологии и инновации',
+      category: 'IT',
+      progress: 75,
+      level: 'Продвинутый',
+      icon: 'Cpu',
+      gradient: 'from-cyan-500 to-teal-500',
+      lessons: 30,
+      completed: 23,
+      description: 'Современные технологии в азиатских странах'
     },
   ];
 
@@ -590,15 +734,19 @@ const Index = () => {
                       </div>
                       <div>
                         <CardTitle className="text-xl">{course.title}</CardTitle>
-                        <Badge variant="secondary" className="mt-1">
-                          {course.level}
+                        <Badge variant="secondary" className="mt-1 text-xs">
+                          {course.category}
                         </Badge>
                       </div>
                     </div>
+                    <Badge variant="outline" className="ml-2">
+                      {course.level}
+                    </Badge>
                   </div>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
+                    <p className="text-sm text-gray-600">{course.description}</p>
                     <div>
                       <div className="flex justify-between text-sm mb-2">
                         <span className="text-gray-600">Прогресс</span>
@@ -606,7 +754,7 @@ const Index = () => {
                       </div>
                       <Progress value={course.progress} className="h-2" />
                     </div>
-                    <div className="flex justify-between text-sm text-gray-600">
+                    <div className="flex justify-between items-center text-sm text-gray-600">
                       <span>
                         <Icon name="BookOpen" size={16} className="inline mr-1" />
                         {course.completed}/{course.lessons} уроков
