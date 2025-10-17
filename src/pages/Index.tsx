@@ -10,16 +10,175 @@ const Index = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [focusMode, setFocusMode] = useState(false);
   const [currentLesson, setCurrentLesson] = useState<any>(null);
+  const [language, setLanguage] = useState('ru');
+  const [startTime, setStartTime] = useState('09:00');
+  const [showTimeSettings, setShowTimeSettings] = useState(false);
 
-  const schedule = [
-    { id: 1, subject: 'Математика', start: '09:00', end: '10:30', duration: 90, icon: 'Calculator', gradient: 'from-purple-500 to-pink-500' },
-    { id: 2, subject: 'Перерыв', start: '10:30', end: '10:45', duration: 15, icon: 'Coffee', gradient: 'from-green-400 to-emerald-400', isBreak: true },
-    { id: 3, subject: 'Физика', start: '10:45', end: '12:15', duration: 90, icon: 'Atom', gradient: 'from-blue-500 to-cyan-500' },
-    { id: 4, subject: 'Обед', start: '12:15', end: '13:00', duration: 45, icon: 'UtensilsCrossed', gradient: 'from-orange-400 to-amber-400', isBreak: true },
-    { id: 5, subject: 'Программирование', start: '13:00', end: '14:30', duration: 90, icon: 'Code', gradient: 'from-orange-500 to-red-500' },
-    { id: 6, subject: 'Перерыв', start: '14:30', end: '14:45', duration: 15, icon: 'Coffee', gradient: 'from-green-400 to-emerald-400', isBreak: true },
-    { id: 7, subject: 'Английский', start: '14:45', end: '16:15', duration: 90, icon: 'Globe', gradient: 'from-green-500 to-emerald-500' },
-  ];
+  const translations: any = {
+    ru: {
+      appName: 'Learn & Grow Soro',
+      home: 'Главная',
+      courses: 'Курсы',
+      schedule: 'Расписание',
+      materials: 'Материалы',
+      tests: 'Тесты',
+      profile: 'Профиль',
+      discipline: 'Дисциплина',
+      disciplineText: 'Строй свою будущее через ежедневную дисциплину',
+      description: 'Бесплатная платформа для школьников и студентов с фокусом на результате',
+      startLearning: 'Начать занятия',
+      achievements: 'Достижения',
+      scheduleToday: 'Расписание на сегодня',
+      totalTime: 'Общее время занятий',
+      focusMode: 'Режим фокусировки',
+      timeLeft: 'Осталось времени',
+      free: 'Бесплатно',
+      setTime: 'Установить время',
+      chooseStartTime: 'Выберите время начала занятий',
+    },
+    tj: {
+      appName: 'Learn & Grow Soro',
+      home: 'Саҳифаи асосӣ',
+      courses: 'Курсҳо',
+      schedule: 'Дастури рӯз',
+      materials: 'Маводд',
+      tests: 'Азмунҳо',
+      profile: 'Профил',
+      discipline: 'Интизом',
+      disciplineText: 'Ояндаатонро бо интизоми ҳаррӯза бисозед',
+      description: 'Платформаи ройгон барои хонандагон ва донишҷӯён',
+      startLearning: 'Оғози таҳсил',
+      achievements: 'Дастовардҳо',
+      scheduleToday: 'Дастури имрӯз',
+      totalTime: 'Вақти умумӣ',
+      focusMode: 'Ҳолати тамаркуз',
+      timeLeft: 'Вақти боқимонда',
+      free: 'Ройгон',
+      setTime: 'Вақтро танзим кунед',
+      chooseStartTime: 'Вақти оғозро интихоб кунед',
+    },
+    kk: {
+      appName: 'Learn & Grow Soro',
+      home: 'Басты бет',
+      courses: 'Курстар',
+      schedule: 'Кесте',
+      materials: 'Құралдар',
+      tests: 'Тесттер',
+      profile: 'Профиль',
+      discipline: 'Тәртіп',
+      disciplineText: 'Күнделікті тәртіп арқылы болашақыңды құр',
+      description: 'Оқушылар мен студенттерге тегін платформа',
+      startLearning: 'Оқуды бастау',
+      achievements: 'Жетістіктер',
+      scheduleToday: 'Бүгінгі кесте',
+      totalTime: 'Жалпы уақыт',
+      focusMode: 'Фокус режимі',
+      timeLeft: 'Қалған уақыт',
+      free: 'Тегін',
+      setTime: 'Уақытты орнату',
+      chooseStartTime: 'Бастау уақытын таңдаңыз',
+    },
+    uz: {
+      appName: 'Learn & Grow Soro',
+      home: 'Bosh sahifa',
+      courses: 'Kurslar',
+      schedule: 'Jadval',
+      materials: 'Materiallar',
+      tests: 'Testlar',
+      profile: 'Profil',
+      discipline: 'Intizom',
+      disciplineText: 'Kelajakni har kungi intizom orqali qur',
+      description: 'O\'quvchilar va talabalar uchun bepul platforma',
+      startLearning: 'O\'qishni boshlash',
+      achievements: 'Yutuqlar',
+      scheduleToday: 'Bugungi jadval',
+      totalTime: 'Umumiy vaqt',
+      focusMode: 'Fokus rejimi',
+      timeLeft: 'Qolgan vaqt',
+      free: 'Bepul',
+      setTime: 'Vaqtni o\'rnatish',
+      chooseStartTime: 'Boshlanish vaqtini tanlang',
+    },
+    ko: {
+      appName: 'Learn & Grow Soro',
+      home: '홈',
+      courses: '과정',
+      schedule: '일정',
+      materials: '자료',
+      tests: '테스트',
+      profile: '프로필',
+      discipline: '규율',
+      disciplineText: '매일의 규율로 미래를 만들어라',
+      description: '학생을 위한 무료 플랫폼',
+      startLearning: '학습 시작',
+      achievements: '성취',
+      scheduleToday: '오늘의 일정',
+      totalTime: '총 시간',
+      focusMode: '집중 모드',
+      timeLeft: '남은 시간',
+      free: '무료',
+      setTime: '시간 설정',
+      chooseStartTime: '시작 시간 선택',
+    },
+    zh: {
+      appName: 'Learn & Grow Soro',
+      home: '主页',
+      courses: '课程',
+      schedule: '日程',
+      materials: '材料',
+      tests: '测试',
+      profile: '个人资料',
+      discipline: '纪律',
+      disciplineText: '通过每日纪律构建未来',
+      description: '面向学生的免费平台',
+      startLearning: '开始学习',
+      achievements: '成就',
+      scheduleToday: '今日日程',
+      totalTime: '总时间',
+      focusMode: '专注模式',
+      timeLeft: '剩余时间',
+      free: '免费',
+      setTime: '设置时间',
+      chooseStartTime: '选择开始时间',
+    },
+  };
+
+  const t = translations[language];
+
+  const generateSchedule = (start: string) => {
+    const [startH, startM] = start.split(':').map(Number);
+    let currentMin = startH * 60 + startM;
+    
+    const addTime = (minutes: number) => {
+      currentMin += minutes;
+      const h = Math.floor(currentMin / 60);
+      const m = currentMin % 60;
+      return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+    };
+    
+    const lessons = [
+      { subject: 'Математика', duration: 90, icon: 'Calculator', gradient: 'from-purple-500 to-pink-500' },
+      { subject: 'Перерыв', duration: 15, icon: 'Coffee', gradient: 'from-green-400 to-emerald-400', isBreak: true },
+      { subject: 'Физика', duration: 90, icon: 'Atom', gradient: 'from-blue-500 to-cyan-500' },
+      { subject: 'Обед', duration: 45, icon: 'UtensilsCrossed', gradient: 'from-orange-400 to-amber-400', isBreak: true },
+      { subject: 'Программирование', duration: 90, icon: 'Code', gradient: 'from-orange-500 to-red-500' },
+      { subject: 'Перерыв', duration: 15, icon: 'Coffee', gradient: 'from-green-400 to-emerald-400', isBreak: true },
+      { subject: 'Английский', duration: 90, icon: 'Globe', gradient: 'from-green-500 to-emerald-500' },
+    ];
+    
+    return lessons.map((lesson, index) => {
+      const startTime = index === 0 ? start : addTime(0);
+      const endTime = addTime(lesson.duration);
+      return {
+        id: index + 1,
+        ...lesson,
+        start: startTime,
+        end: endTime,
+      };
+    });
+  };
+
+  const schedule = generateSchedule(startTime);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -133,11 +292,11 @@ const Index = () => {
                 <Icon name="GraduationCap" className="text-white" size={24} />
               </div>
               <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                Learn & Grow Soro
+                {t.appName}
               </h1>
             </div>
             <nav className="hidden md:flex gap-6">
-              {['Главная', 'Курсы', 'Расписание', 'Материалы', 'Тесты'].map((item) => (
+              {[t.home, t.courses, t.schedule, t.materials, t.tests].map((item) => (
                 <button
                   key={item}
                   className="text-gray-600 hover:text-purple-600 transition-colors font-medium"
@@ -146,8 +305,21 @@ const Index = () => {
                 </button>
               ))}
             </nav>
-            <Button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
-              Профиль
+            <div className="flex items-center gap-2">
+              <select
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
+                className="px-3 py-2 border rounded-lg text-sm bg-white"
+              >
+                <option value="ru">🇷🇺 Русский</option>
+                <option value="tj">🇹🇯 Тоҷикӣ</option>
+                <option value="kk">🇰🇿 Қазақ</option>
+                <option value="uz">🇺🇿 O'zbek</option>
+                <option value="ko">🇰🇷 한국어</option>
+                <option value="zh">🇨🇳 中文</option>
+              </select>
+              <Button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
+                {t.profile}
             </Button>
           </div>
         </div>
@@ -165,7 +337,7 @@ const Index = () => {
                     </div>
                     <div>
                       <div className="flex items-center gap-2 mb-1">
-                        <Badge className="bg-orange-500 text-white">Режим фокусировки</Badge>
+                        <Badge className="bg-orange-500 text-white">{t.focusMode}</Badge>
                         <Icon name="Lock" size={16} className="text-orange-600" />
                       </div>
                       <h3 className="text-2xl font-bold">{currentLesson.subject}</h3>
@@ -173,7 +345,7 @@ const Index = () => {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm text-gray-600 mb-1">Осталось времени</p>
+                    <p className="text-sm text-gray-600 mb-1">{t.timeLeft}</p>
                     <p className="text-4xl font-bold text-orange-600">
                       {getTimeRemaining()?.hours}ч {getTimeRemaining()?.minutes}м
                     </p>
@@ -191,15 +363,15 @@ const Index = () => {
         <section className="mb-16">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h3 className="text-3xl font-bold mb-2">Расписание на сегодня</h3>
-              <p className="text-gray-600">Общее время занятий: {Math.floor(totalStudyTime / 60)}ч {totalStudyTime % 60}м</p>
+              <h3 className="text-3xl font-bold mb-2">{t.scheduleToday}</h3>
+              <p className="text-gray-600">{t.totalTime}: {Math.floor(totalStudyTime / 60)}ч {totalStudyTime % 60}м (начало {startTime})</p>
             </div>
             <Button 
               variant={focusMode ? "destructive" : "default"}
               className={focusMode ? "" : "bg-gradient-to-r from-purple-500 to-pink-500"}
             >
-              <Icon name={focusMode ? "Lock" : "Unlock"} size={20} className="mr-2" />
-              {focusMode ? 'Фокус активен' : 'Начать занятия'}
+              <Icon name={focusMode ? "Lock" : "Target"} size={20} className="mr-2" />
+              {focusMode ? t.focusMode : t.discipline}
             </Button>
           </div>
           <div className="grid gap-4">
@@ -282,27 +454,28 @@ const Index = () => {
         <section className="mb-16 animate-fade-in">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <Badge className="mb-4 bg-purple-100 text-purple-700 hover:bg-purple-200">
-                Платформа нового поколения
-              </Badge>
+              <div className="flex items-center gap-2 mb-4">
+                <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-200">
+                  {t.free}
+                </Badge>
+                <Badge className="bg-green-100 text-green-700 hover:bg-green-200">
+                  {t.discipline}
+                </Badge>
+              </div>
               <h2 className="text-5xl font-bold mb-6 leading-tight">
-                Обучение с{' '}
-                <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent">
-                  удовольствием
-                </span>
+                {t.disciplineText}
               </h2>
               <p className="text-xl text-gray-600 mb-8">
-                Современная платформа для школьников и студентов с интерактивными курсами,
-                отслеживанием прогресса и персональными рекомендациями
+                {t.description}
               </p>
               <div className="flex gap-4">
                 <Button size="lg" className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
-                  <Icon name="Play" size={20} className="mr-2" />
-                  Начать обучение
+                  <Icon name="Target" size={20} className="mr-2" />
+                  {t.startLearning}
                 </Button>
-                <Button size="lg" variant="outline">
-                  <Icon name="BookOpen" size={20} className="mr-2" />
-                  Каталог курсов
+                <Button size="lg" variant="outline" onClick={() => setShowTimeSettings(true)}>
+                  <Icon name="Clock" size={20} className="mr-2" />
+                  {t.setTime}
                 </Button>
               </div>
             </div>
@@ -318,7 +491,7 @@ const Index = () => {
                     <Icon name="TrendingUp" className="text-white" size={24} />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Твой прогресс</p>
+                    <p className="text-sm text-gray-500">{t.discipline}</p>
                     <p className="text-2xl font-bold text-gray-800">{totalProgress}%</p>
                   </div>
                 </div>
@@ -327,10 +500,50 @@ const Index = () => {
           </div>
         </section>
 
+        {showTimeSettings && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 animate-fade-in">
+            <Card className="max-w-md w-full mx-4">
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <span>{t.chooseStartTime}</span>
+                  <Button variant="ghost" size="sm" onClick={() => setShowTimeSettings(false)}>
+                    <Icon name="X" size={20} />
+                  </Button>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">{t.chooseStartTime}</label>
+                    <input
+                      type="time"
+                      value={startTime}
+                      onChange={(e) => setStartTime(e.target.value)}
+                      className="w-full px-4 py-3 border rounded-lg text-lg"
+                    />
+                  </div>
+                  <div className="bg-purple-50 p-4 rounded-lg">
+                    <p className="text-sm text-gray-700">
+                      {t.totalTime}: 6ч 0м
+                    </p>
+                  </div>
+                  <Button
+                    className="w-full bg-gradient-to-r from-purple-500 to-pink-500"
+                    onClick={() => setShowTimeSettings(false)}
+                  >
+                    <Icon name="Check" size={20} className="mr-2" />
+                    Сохранить
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
         <section className="mb-16">
           <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold mb-4">Твои достижения</h3>
-            <p className="text-gray-600">Отслеживай успехи и получай награды</p>
+            <h3 className="text-3xl font-bold mb-4">{t.achievements}</h3>
+            <p className="text-gray-600">{t.discipline}</p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {achievements.map((achievement, index) => (
