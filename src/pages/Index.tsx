@@ -313,6 +313,54 @@ const Index = () => {
     },
     {
       id: 8,
+      title: 'Таджикский язык',
+      category: 'Языки',
+      progress: 50,
+      level: 'Средний',
+      icon: 'Languages',
+      gradient: 'from-green-600 to-emerald-600',
+      lessons: 28,
+      completed: 14,
+      description: 'Государственный язык Таджикистана'
+    },
+    {
+      id: 9,
+      title: 'Узбекский язык',
+      category: 'Языки',
+      progress: 42,
+      level: 'Начальный',
+      icon: 'Languages',
+      gradient: 'from-teal-500 to-cyan-500',
+      lessons: 32,
+      completed: 13,
+      description: 'Государственный язык Узбекистана'
+    },
+    {
+      id: 10,
+      title: 'Корейский язык',
+      category: 'Языки',
+      progress: 38,
+      level: 'Начальный',
+      icon: 'Languages',
+      gradient: 'from-blue-500 to-purple-500',
+      lessons: 36,
+      completed: 14,
+      description: 'Один из важнейших языков Восточной Азии'
+    },
+    {
+      id: 11,
+      title: 'Японский язык',
+      category: 'Языки',
+      progress: 28,
+      level: 'Начальный',
+      icon: 'Languages',
+      gradient: 'from-rose-500 to-pink-500',
+      lessons: 38,
+      completed: 11,
+      description: 'Язык современных технологий и культуры'
+    },
+    {
+      id: 12,
       title: 'Искусство Азии',
       category: 'Творчество',
       progress: 65,
@@ -324,7 +372,7 @@ const Index = () => {
       description: 'Живопись, шахматы, рисование и традиционное искусство'
     },
     {
-      id: 9,
+      id: 13,
       title: 'Логические задачи',
       category: 'Развитие мышления',
       progress: 50,
@@ -336,7 +384,7 @@ const Index = () => {
       description: 'Головоломки для развития критического мышления'
     },
     {
-      id: 10,
+      id: 14,
       title: 'Тайм-менеджмент',
       category: 'Навыки',
       progress: 85,
@@ -348,7 +396,7 @@ const Index = () => {
       description: 'Организация учебного процесса и управление временем'
     },
     {
-      id: 11,
+      id: 15,
       title: 'Межкультурная коммуникация',
       category: 'Социальные навыки',
       progress: 40,
@@ -360,7 +408,7 @@ const Index = () => {
       description: 'Навыки взаимодействия между разными национальностями'
     },
     {
-      id: 12,
+      id: 16,
       title: 'Олимпиады и конкурсы',
       category: 'Соревнования',
       progress: 30,
